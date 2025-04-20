@@ -1,4 +1,4 @@
-name: "Multi-event pipeline / workflow"  # Name of the pipeline
+name: "Multi-event pipeline / workflow"  # Name of the workflow/pipeline
 
 on:      
     push:     # Whenever a push is made to the repository of the master/test branch
@@ -10,6 +10,7 @@ on:
             - master
         types:
             - closed
+            - opened
     workflow_dispatch:
 
 jobs:
@@ -34,7 +35,14 @@ jobs:
           - name: "Running on pull request closed" 
             run: echo "Running on pull request closed"
 
-    on-workflow-dispatch:  # Job 4
+    on-pull-request-opened:  # Job 4
+        if: github.event_name == 'pull_request' && github.event.action =='opened'
+        runs-on: windows-latest
+        steps: # Steps to be executed in the job
+          - name: "Running on pull request opened" 
+            run: echo "Running on pull request opened"
+
+    on-workflow-dispatch:  # Job 5
         if: github.event_name == 'workflow_dispatch'
         runs-on: windows-latest
         steps: # Steps to be executed in the job
